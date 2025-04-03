@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>PageMaker</title>
     <script src="funcoes.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="p-4">
     <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Arquivo HTML</h1>
+        <label class="block mb-2">Nome do Arquivo HTML</label>
+        <input type="text" id="nomeHTML" name="nomeHTML" class="border p-2 w-full">
+        <br>
         <h1 class="text-2xl font-bold mb-4">Cabeçalho</h1>
         <label class="block mb-2">Cor de fundo</label>
         <select id="corFundo" name="corFundo" class="border p-2 mb-2 w-full">
@@ -20,7 +26,8 @@
             <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
         </select><br>
         <label class="block mb-2">Texto para cabeçalho</label>
-        <input type="text" id="textoCabecalho" name="textoCabecalho" class="border p-2 mb-2 w-full"><br>
+        <input type="text" id="textoCabecalho" name="textoCabecalho" class="border p-2 mb-2 w-full">
+        <br>
         <label class="block mb-2">Cor da Fonte</label>
         <select id="corFonte" name="corFonte" class="border p-2 mb-2 w-full">
             <option>--</option>
@@ -45,8 +52,9 @@
 
     <div class="mb-8">
         <h1 class="text-2xl font-bold mb-4">Links</h1>
-        <label class="block mb-2">Texto para os links</label>
+        <label class="block mb-2">Texto para o links</label>
         <input type="text" name="links" id="links" placeholder="link1;link2;link3...." class="border p-2 mb-2 w-full">
+        <input type="file" name="href" id="href" class="mt-2">
         <br>
         <label class="block mb-2">Cor do link</label>
         <select id="corLinks" name="corLinks" class="border p-2 mb-2 w-full">
@@ -59,22 +67,33 @@
             <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
         </select><br>
         <label class="block mb-2">Estilo do link</label><br>
-        <label class="inline-flex items-center"><input type="radio" name="estiloLinks" id="estiloLinks" value="1" class="mr-2">Sublinhado</label><br>
-        <label class="inline-flex items-center"><input type="radio" name="estiloLinks" id="estiloLinks" value="0" class="mr-2">Não Sublinhado</label><br>
-
-        <button onclick="gerarCodigo()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Gerar código</button>
+        <label class="inline-flex items-center">
+            <input type="radio" name="estiloLinks" id="estiloLinks" value="1" class="mr-2">
+            Sublinhado
+        </label><br>
+        <label class="inline-flex items-center">
+            <input type="radio" name="estiloLinks" id="estiloLinks" value="0" class="mr-2">
+            Não Sublinhado
+        </label><br>
+        <button onclick="gerarCodigo()"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Gerar código</button>
     </div>
 
     <div class="mb-8">
         <h1 class="text-2xl font-bold mb-4">HTML</h1>
         <textarea cols="100" rows="30" id="codeHTML" class="border p-2 w-full"></textarea><br>
-        <button onclick="download('codeHTML','index.html')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Download do código</button>
+        <button onclick="download('codeHTML','')"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Download do
+            código</button>
     </div>
 
     <div>
         <h1 class="text-2xl font-bold mb-4">CSS</h1>
         <textarea id="codeCSS" cols="100" rows="30" class="border p-2 w-full"></textarea><br>
-        <button onclick="download('codeCSS','estilo.css')" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4">Download do código</button>
+        <button onclick="download('codeCSS','estilo.css')"
+            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4">Download do
+            código</button>
     </div>
 </body>
+
 </html>
