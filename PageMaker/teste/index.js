@@ -87,7 +87,7 @@ function configHTMLCabecalho() {
         if (!textoCabecalho) {
             throw new Error("Preencha o texto do cabeçalho.");
         }
-        return `<div id='cabecalho'><h1>${textoCabecalho}</h1></div>\n`;
+        return <div id='cabecalho'><h1>${textoCabecalho}</h1></div>\n;
     } catch (error) {
         alert(error.message);
         return "";
@@ -101,15 +101,15 @@ function gerarCodigo() {
         document.querySelector("#codeCSS").value = cssCabecalho + cssLinks;
 
         let htmlCabecalho = configHTMLCabecalho();
-        let htmlLinks = `<nav id='links'>\n${configHtmlLinks()}\n</nav>\n`;
+        let htmlLinks = <nav id='links'>\n${configHtmlLinks()}\n</nav>\n;
 
         let nomeArquivoHTML = document.getElementById("nomeHTML").value.trim();
         let nomeFinalHTML = nomeArquivoHTML === "" ? "index.html" : nomeArquivoHTML + ".html";
 
-        let ctxHTML = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>Minha página</title>\n<link rel='stylesheet' href='estilo.css'>\n</head>\n<body>\n${htmlCabecalho}${htmlLinks}<div id='conteudo'></div>\n</body>\n</html>`;
+        let ctxHTML = <!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>Minha página</title>\n<link rel='stylesheet' href='estilo.css'>\n</head>\n<body>\n${htmlCabecalho}${htmlLinks}<div id='conteudo'></div>\n</body>\n</html>;
         document.querySelector("#codeHTML").value = ctxHTML;
 
-        document.querySelector("#codeHTML").nextElementSibling.setAttribute('onclick', `download('codeHTML', '${nomeFinalHTML}')`);
+        document.querySelector("#codeHTML").nextElementSibling.setAttribute('onclick', download('codeHTML', '${nomeFinalHTML}'));
 
     } catch (error) {
         // Os erros já são tratados nas funções de configuração
