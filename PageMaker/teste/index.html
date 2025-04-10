@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PageMaker</title>
+    <script src="funcoes.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="p-4">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Arquivo HTML</h1>
+        <label class="block mb-2">Nome do Arquivo HTML</label>
+        <input type="text" id="nomeHTML" name="nomeHTML" class="border p-2 w-full">
+        <br>
+        <h1 class="text-2xl font-bold mb-4">Cabeçalho</h1>
+        <label class="block mb-2">Cor de fundo</label>
+        <select id="corFundo" name="corFundo" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#FF0000" class="bg-red-500 text-white">Vermelho</option>
+            <option value="#00FF00" class="bg-green-500">Verde</option>
+            <option value="#0000FF" class="bg-blue-500 text-white">Azul</option>
+            <option value="#FFFF00" class="bg-yellow-500">Amarelo</option>
+            <option value="#FFA500" class="bg-orange-500">Laranja</option>
+            <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
+        </select><br>
+        <label class="block mb-2">Texto para cabeçalho</label>
+        <input type="text" id="textoCabecalho" name="textoCabecalho" class="border p-2 mb-2 w-full">
+        <br>
+        <label class="block mb-2">Cor da Fonte</label>
+        <select id="corFonte" name="corFonte" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#FF0000" class="bg-red-500 text-white">Vermelho</option>
+            <option value="#00FF00" class="bg-green-500">Verde</option>
+            <option value="#0000FF" class="bg-blue-500 text-white">Azul</option>
+            <option value="#FFFF00" class="bg-yellow-500">Amarelo</option>
+            <option value="#FFA500" class="bg-orange-500">Laranja</option>
+            <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
+        </select><br>
+        <label class="block mb-2">Tamanho Fonte</label>
+        <select id="tamFonte" name="tamFonte" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+        </select><br>
+        <label class="block mb-2">Altura do Cabeçalho (em pixels)</label>
+        <input type="number" id="alturaCabecalho" name="alturaCabecalho" class="border p-2 mb-2 w-full" value="50">
+        <br>
+        <label class="block mb-2">Largura do Cabeçalho (em %)</label>
+        <input type="number" id="larguraCabecalho" name="larguraCabecalho" class="border p-2 mb-2 w-full" value="100">
+        <br>
+        <label class="block mb-2">Borda do Cabeçalho (ex: 1px solid black)</label>
+        <input type="text" id="bordaCabecalho" name="bordaCabecalho" class="border p-2 mb-2 w-full" value="1px solid black">
+        <br>
+    </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Links</h1>
+        <label class="block mb-2">Texto para os links (separados por ;)</label>
+        <input type="text" name="links" id="links" placeholder="link1;link2;link3...." class="border p-2 mb-2 w-full">
+        <br>
+        <label class="block mb-2">Cor do link</label>
+        <select id="corLinks" name="corLinks" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#FF0000" class="bg-red-500 text-white">Vermelho</option>
+            <option value="#00FF00" class="bg-green-500">Verde</option>
+            <option value="#0000FF" class="bg-blue-500 text-white">Azul</option>
+            <option value="#FFFF00" class="bg-yellow-500">Amarelo</option>
+            <option value="#FFA500" class="bg-orange-500">Laranja</option>
+            <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
+        </select><br>
+        <label class="block mb-2">Cor do link ao passar o mouse</label>
+        <input type="color" id="corHoverLink" name="corHoverLink" class="border p-2 mb-2 w-1/4" value="#0000FF">
+        <br>
+        <label class="block mb-2">Efeito do link ao passar o mouse</label>
+        <select id="efeitoHoverLink" name="efeitoHoverLink" class="border p-2 mb-2 w-full">
+            <option value="underline">Sublinhado</option>
+            <option value="overline">Sobrelinhado</option>
+            <option value="line-through">Tachado</option>
+            <option value="underline wavy blue">Sublinhado Ondulado Azul</option>
+            <option value="none">Nenhum</option>
+        </select><br>
+        <label class="block mb-2">Cor de fundo dos Links</label>
+        <select id="corFundoLinks" name="corFundoLinks" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#F0F0F0">Cinza Claro</option>
+            <option value="#E0FFFF">Azul Claro</option>
+            <option value="#FFFFE0">Amarelo Claro</option>
+            <option value="#D3D3D3">Cinza Médio</option>
+        </select><br>
+        <label class="block mb-2">Estilo do link</label><br>
+        <label class="inline-flex items-center">
+            <input type="radio" name="estiloLinks" id="estiloLinksSublinhado" value="1" class="mr-2" checked>
+            Sublinhado
+        </label><br>
+        <label class="inline-flex items-center">
+            <input type="radio" name="estiloLinks" id="estiloLinksNaoSublinhado" value="0" class="mr-2">
+            Não Sublinhado
+        </label><br>
+        <button onclick="gerarCodigo()"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Gerar código</button>
+    </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">HTML</h1>
+        <textarea cols="100" rows="30" id="codeHTML" class="border p-2 w-full"></textarea><br>
+        <button onclick="download('codeHTML','index.html')"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Download do
+            código</button>
+    </div>
+
+    <div>
+        <h1 class="text-2xl font-bold mb-4">CSS</h1>
+        <textarea id="codeCSS" cols="100" rows="30" class="border p-2 w-full"></textarea><br>
+        <button onclick="download('codeCSS','estilo.css')"
+            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4">Download do
+            código</button>
+    </div>
+</body>
+
+</html>
