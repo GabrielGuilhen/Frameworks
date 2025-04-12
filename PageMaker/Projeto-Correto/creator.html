@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PageMaker</title>
+    <script src="funcoes.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-4">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Cabeçalho</h1>
+        <label class="block mb-2">Cor de fundo</label>
+        <select id="corFundo" name="corFundo" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#FF0000" class="bg-red-500 text-white">Vermelho</option>
+            <option value="#00FF00" class="bg-green-500">Verde</option>
+            <option value="#0000FF" class="bg-blue-500 text-white">Azul</option>
+            <option value="#FFFF00" class="bg-yellow-500">Amarelo</option>
+            <option value="#FFA500" class="bg-orange-500">Laranja</option>
+            <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
+        </select><br>
+        <label class="block mb-2">Texto para cabeçalho</label>
+        <input type="text" id="textoCabecalho" name="textoCabecalho" class="border p-2 mb-2 w-full"><br>
+        <label class="block mb-2">Cor da Fonte</label>
+        <select id="corFonte" name="corFonte" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="#FF0000" class="bg-red-500 text-white">Vermelho</option>
+            <option value="#00FF00" class="bg-green-500">Verde</option>
+            <option value="#0000FF" class="bg-blue-500 text-white">Azul</option>
+            <option value="#FFFF00" class="bg-yellow-500">Amarelo</option>
+            <option value="#FFA500" class="bg-orange-500">Laranja</option>
+            <option value="#800080" class="bg-purple-500 text-white">Roxo</option>
+        </select><br>
+        <label class="block mb-2">Tamanho Fonte</label>
+        <select id="tamFonte" name="tamFonte" class="border p-2 mb-2 w-full">
+            <option>--</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+        </select><br>
+        <label class="block mb-2">Altura do Cabeçalho (em pixels)</label>
+        <input type="number" id="alturaCabecalho" name="alturaCabecalho" value="100" class="border p-2 mb-2 w-full"><br>
+        <label class="block mb-2">Largura do Cabeçalho (em pixels)</label>
+        <input type="number" id="larguraCabecalho" name="larguraCabecalho" value="300" class="border p-2 mb-2 w-full"><br>
+    </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Links</h1>
+        <div class="mb-4">
+            <input type="checkbox" id="usarLinks" class="mr-2" onchange="atualizarAreaLinks()">
+            <label for="usarLinks">Esta página terá links</label>
+        </div>
+
+        <div id="areaConfigLinks" class="hidden">
+            <label class="block mb-2">Nomes dos links (separados por vírgula)</label>
+            <input type="text" id="nomesLinks" class="border p-2 mb-2 w-full" placeholder="Página Inicial, Sobre Nós, Contato" onchange="gerarCamposArquivo()">
+
+            <div id="areaArquivos">
+                </div>
+
+            <label class="block mb-2">Cor dos links</label>
+            <select id="corLinks" name="corLinks" class="border p-2 mb-2 w-full">
+                <option>--</option>
+                <option value="#007bff" class="text-blue-500">Azul Padrão</option>
+                <option value="#28a745" class="text-green-500">Verde</option>
+                <option value="#dc3545" class="text-red-500">Vermelho</option>
+                <option value="#ffc107" class="text-yellow-500">Amarelo</option>
+            </select><br>
+
+            <label class="block mb-2">Cor dos links ao passar o mouse</label>
+            <input type="color" id="corHoverLinks" class="border p-2 mb-2 w-full" value="#ff6600">
+
+            <label class="block mb-2">Efeito ao passar o mouse</label>
+            <select id="efeitoHover" class="border p-2 mb-2 w-full">
+                <option value="nenhum">Nenhum</option>
+                <option value="mudarCor">Mudar cor</option>
+                <option value="sublinhar">Sublinhar</option>
+                <option value="negrito">Negrito</option>
+            </select><br>
+
+            <label class="block mb-2">Estilo dos links</label><br>
+            <label class="inline-flex items-center mr-4">
+                <input type="radio" name="estiloLinks" value="1" class="mr-2">Sublinhado
+            </label>
+            <label class="inline-flex items-center">
+                <input type="radio" name="estiloLinks" value="0" class="mr-2" checked>Não Sublinhado
+            </label><br>
+        </div>
+        <button onclick="gerarCodigo()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Gerar código</button>
+    </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">Conteúdo</h1>
+        <label class="block mb-2">Texto do Conteúdo</label>
+        <textarea id="txtConteudo" rows="10" class="border p-2 w-full"></textarea><br>
+    </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-4">HTML</h1>
+        <textarea cols="100" rows="15" id="codeHTML" class="border p-2 w-full"></textarea><br>
+        <button onclick="download('codeHTML','index.html')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Download HTML</button>
+    </div>
+
+    <div>
+        <h1 class="text-2xl font-bold mb-4">CSS</h1>
+        <textarea id="codeCSS" cols="100" rows="15" class="border p-2 w-full"></textarea><br>
+        <button onclick="download('codeCSS','estilo.css')" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4">Download CSS</button>
+    </div>
+</body>
+</html>
