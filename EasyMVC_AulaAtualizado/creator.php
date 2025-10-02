@@ -192,6 +192,9 @@ class {$nomeClasse}Control {
           case 2:
             \$this->excluir();
           break;
+          case 3;
+            \$this->alterar();
+          break;
        }
     }
   
@@ -202,7 +205,10 @@ class {$nomeClasse}Control {
     function excluir(){
         \$this->dao->excluir(\$_REQUEST['id']);
     }
-    function alterar(){}
+    function alterar(){
+    {$posts}
+    \$this->dao->alterar(\$this->{$nomeTabela});
+}
     function buscarId({$nomeClasse} \${$nomeTabela}){}
     function buscaTodos(){}
 
@@ -289,6 +295,13 @@ function listaGeral(){
     \$query = \$this->con->query(\$sql);
     \$dados = \$query->fetch(PDO::FETCH_ASSOC);
     return \$dados;
+}   
+    function alterar(\$obj){
+    \$sql = "UPDATE {$nomeTabela} SET {$sqlUpdate} WHERE {$id}=?";
+    \$stmt = \$this->con->prepare(\$sql);
+    {$AtributosMetodos}
+    \$stmt->execute([{$atributosOk}, \$obj->get" . ucfirst($id) . "()]);
+    header("Location:../view/lista{$nomeClasse}.php");
 }   
 function excluir(\$id){
     \$sql = "delete from {$nomeTabela} where {$id}=\$id";
