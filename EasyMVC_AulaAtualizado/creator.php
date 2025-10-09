@@ -21,8 +21,9 @@ class Creator {
             $this->ClassesControl();
             $this->classesView();
             $this->ClassesDao();
+            $this->paginaInicial();
             $this->compactar();
-            header("Location:index.php?msg=2");
+            header("Location:sistema/index.php?msg=2");
         }
     }//fimConsytruct
     function criaDiretorios() {
@@ -165,9 +166,15 @@ EOT;
             $nomeClasse=ucfirst($nomeTabela);
             $posts="";
             foreach ($atributos as $atributo) {
-                $atributo=$atributo->Field;
-                $posts.= "\$this->{$nomeTabela}->set".ucFirst($atributo).
-                    "(\$_POST['{$atributo}']);\n\t\t";
+                
+                if($atributo->Key == "PRI"){
+                    $id = $atributo->Field;
+                    $postId = "\$this->{$nomeTabela}->set".ucFirst($atributo->Field).
+                    "(\$_POST['{$atributo->Field}']);\n\t\t";
+                    continue;
+                }
+                $posts.= "\$this->{$nomeTabela}->set".ucFirst($atributo->Field).
+                    "(\$_POST['{$atributo->Field}']);\n\t\t";
             }
 
             $conteudo = <<<EOT
@@ -203,10 +210,11 @@ class {$nomeClasse}Control {
         \$this->dao->inserir(\$this->{$nomeTabela});
     }
     function excluir(){
-        \$this->dao->excluir(\$_REQUEST['id']);
+        \$this->dao->excluir(\$_REQUEST['$id']);
     }
     function alterar(){
     {$posts}
+    {$postId}
     \$this->dao->alterar(\$this->{$nomeTabela});
 }
     function buscarId({$nomeClasse} \${$nomeTabela}){}
@@ -252,23 +260,42 @@ EOT;
             $atributos=$this->buscaAtributos($nomeTabela);
             $id="";
             foreach($atributos as $atributo) {
-                if ($atributo->Key == "PRI")
+
+                if ($atributo->Key == "PRI"){
                     $id = $atributo->Field;
-            }
-            $atributos = array_map(function($obj) {
-                return $obj->Field;
-         }, $atributos);
+                    $idUC = ucfirst($id);
+                    $setId = "\${$id} = \$obj->get{$idUC}();\n";
+                }
+
+        }
+
+        $atributos = array_filter($atributos, function($obj) {
+            return !($obj->Key === "PRI");
+        });
+
+        $atributos = array_map(function($obj) {
+            return $obj->Field;
+        }, $atributos);
+
+        
             $sqlCols = implode(', ', $atributos);
             $placeholders = implode(', ', array_fill(0, count($atributos), '?'));
          $vetAtributos=[];
          $AtributosMetodos="";
-
+         $sqlAlterar="";
          foreach ($atributos as $atributo) {
-             //$id=$atributos[0];
-             $atr=ucfirst($atributo);
-             array_push($vetAtributos,"\${$atributo}");
-             $AtributosMetodos.="\${$atributo}=\$obj->get{$atr}();\n";
+             
+            $atr=ucfirst($atributo);
+
+            
+            array_push($vetAtributos,"\${$atributo}");
+            $AtributosMetodos.="\${$atributo}=\$obj->get{$atr}();\n";
+        
+                $sqlAlterar .= $atributo .  "= ?,";
+             
          }
+         $sqlAlterar = rtrim($sqlAlterar, ','); 
+         
          $atributosOk=implode(",",$vetAtributos);
          $conteudo = <<<EOT
 <?php
@@ -283,6 +310,7 @@ function inserir(\$obj) {
     \$stmt = \$this->con->prepare(\$sql);
     {$AtributosMetodos}
     \$stmt->execute([{$atributosOk}]);
+    header("Location:../view/lista{$nomeClasse}.php");
 }
 function listaGeral(){
     \$sql = "select * from {$nomeTabela}";
@@ -297,10 +325,11 @@ function listaGeral(){
     return \$dados;
 }   
     function alterar(\$obj){
-    \$sql = "UPDATE {$nomeTabela} SET {$sqlUpdate} WHERE {$id}=?";
+    \$sql = "UPDATE {$nomeTabela} SET {$sqlAlterar} WHERE {$id}=?";
     \$stmt = \$this->con->prepare(\$sql);
     {$AtributosMetodos}
-    \$stmt->execute([{$atributosOk}, \$obj->get" . ucfirst($id) . "()]);
+    {$setId}
+    \$stmt->execute([{$atributosOk}, \${$id}]);
     header("Location:../view/lista{$nomeClasse}.php");
 }   
 function excluir(\$id){
@@ -319,9 +348,16 @@ EOT;
         //formulários
         foreach ($this->tabelas as $tabela) {
             $nomeTabela = array_values((array) $tabela)[0];
+            $nomeClasse = ucfirst($nomeTabela);
             $atributos=$this->buscaAtributos($nomeTabela);
             $formCampos="";
-            foreach ($atributos as $atributo) {
+            $formId="";
+           foreach ($atributos as $atributo) {
+                
+                if($atributo->Key == "PRI"){
+                    $formId = "<input type='hidden' value='<?php echo \$_REQUEST['$atributo->Field']; ?>' name='{$atributo->Field}'><br>\n";
+                    continue;
+                }
                 $atributo=$atributo->Field;
                 $formCampos .= "<label for='{$atributo}'>{$atributo}</label>\n";
                 $formCampos .= "<input type='text' " .
@@ -345,26 +381,30 @@ EOT;
         <form action="../control/{$nomeTabela}Control.php?a=<?php echo \$acao ?>" method="post">
         <h1>Cadastro de {$nomeTabela}</h1>
             {$formCampos}
+            {$formId}
              <button type="submit">Enviar</button>
+             <a href="lista{$nomeClasse}.php">Voltar</a>
         </form>
     </body>
 </html>
 HTML;
-            file_put_contents("sistema/view/{$nomeTabela}.php", $conteudo); // Exemplo salvando como arquivo
+  file_put_contents("sistema/view/{$nomeTabela}.php", $conteudo); // Exemplo salvando como arquivo
         }
         //Listas
         foreach ($this->tabelas as $tabela) {
-            $nomeTabela = array_values((array)$tabela)[0];
-            $nomeTabelaUC=ucfirst($nomeTabela);
-            $atributos=$this->buscaAtributos($nomeTabela);
-            $attr = "";
-            $id="";
-            foreach($atributos as $atributo){
-                if($atributo->Key=="PRI")
+             $nomeTabela = array_values((array)$tabela)[0];
+             $nomeTabelaUC=ucfirst($nomeTabela);
+             $atributos=$this->buscaAtributos($nomeTabela);
+             $attr = "";
+             foreach($atributos as $atributo){
+
+                if($atributo->Key=="PRI"){
                     $id="{\$dado['{$atributo->Field}']}";
+                    continue;
+                }    
 
                 $attr.= "echo \"<td>{\$dado['{$atributo->Field}']}</td>\";\n";
-            }
+              }
             $conteudo="";
             $conteudo = <<<HTML
 
@@ -386,7 +426,7 @@ HTML;
        "<a href='../control/{$nomeTabela}Control.php?id={$id}&a=2'> Excluir</a>".
        "</td>";
        echo "<td>" . 
-        "<a href='../view/{$nomeTabela}.php?id={$id}'> Alterar</a>" .
+        "<a href='../view/{$nomeTabela}.php?id={$id}&a=3'> Alterar</a>" .
        "</td>";
        echo "</tr>";
     }
@@ -398,6 +438,124 @@ HTML;
   file_put_contents("sistema/view/lista{$nomeTabelaUC}.php", $conteudo);        
         }
     }//fimView
- 
+ function paginaInicial() {
+        $nomeSistema = ucfirst($this->banco);
+
+        $linksCadastros = "";
+        foreach ($this->tabelas as $tabela) {
+            $nomeTabela = array_values((array)$tabela)[0];
+            $nomeTabelaCapitalizada = ucfirst($nomeTabela);
+            $linksCadastros .= "<li><a href=\"view/{$nomeTabela}.php\">Cadastro de {$nomeTabelaCapitalizada}</a></li>\n                ";
+        }
+
+        $linksRelatorios = "";
+        foreach ($this->tabelas as $tabela) {
+            $nomeTabela = array_values((array)$tabela)[0];
+            $nomeTabelaCapitalizada = ucfirst($nomeTabela);
+            $linksRelatorios .= "<li><a href=\"view/lista{$nomeTabelaCapitalizada}.php\">Relatório de {$nomeTabelaCapitalizada}</a></li>\n                ";
+        }
+
+        $conteudo = <<<HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{$nomeSistema}</title>
+    <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .cabecalho {
+        width: 100%;
+        height: 200px;
+        background-color: #2c3e50;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .menu {
+        width: 100%;
+        height: 100px;
+        background-color: #34495e;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+    }
+    .menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 40px;
+    }
+    .menu li {
+        position: relative;
+    }
+    .menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 10px;
+        display: block;
+    }
+    .menu li ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #2c3e50;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        min-width: 200px;
+    }
+    .menu li ul li a {
+        padding: 10px;
+        font-size: 16px;
+    }
+    .menu li:hover ul {
+        display: block;
+    }
+    .conteudo {
+        min-height: calc(100vh - 300px);
+        padding: 20px;
+        background-color: #ecf0f1;
+    }
+    </style>
+</head>
+<body>
+    <div class="cabecalho">
+        Sistema {$nomeSistema}
+    </div>
+    <div class="menu">
+        <ul>
+            <li>
+                <a href="#">Cadastros</a>
+                <ul>
+                    {$linksCadastros}
+                </ul>
+            </li>
+            <li>
+                <a href="#">Relatórios</a>
+                <ul>
+                    {$linksRelatorios}
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="conteudo">
+        <h2>Bem-vindo ao Sistema {$nomeSistema}!</h2>
+        <p>Utilize o menu acima para navegar pelas funcionalidades do sistema.</p>
+        <p>Você pode acessar os cadastros e relatórios através dos menus correspondentes.</p>
+    </div>
+</body>
+</html>
+HTML;
+        file_put_contents("sistema/index.php", $conteudo);
+    }
 }
 new Creator();
